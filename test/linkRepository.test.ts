@@ -33,3 +33,14 @@ test("Não deve permitir salvar dois links com a mesma URL", function () {
     linkRepository.save(link1);
     expect(() => linkRepository.save(link2)).toThrow(new Error("URL already exists"));
 });
+
+test("Deve permitir salvar a mesma URL para dois usuários diferentes", function () {
+    const user1 = new User('olokorre', 'password');
+    const user2 = new User('nemo', 'password');
+    const linkRepository = new LinkRepositoryMemory();
+    const link1 = new Link('https://server-foda.com:8006/', 'My proxmox', user1.id);
+    const link2 = new Link('https://server-foda.com:8006/', 'My homeserver', user2.id);
+    linkRepository.save(link1);
+    linkRepository.save(link2);
+    expect(linkRepository.getAll()).toHaveLength(2);
+});

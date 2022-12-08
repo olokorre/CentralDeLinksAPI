@@ -11,7 +11,7 @@ export default class LinkRepositoryMemory implements LinkRepository {
     
     save(link: Link): Link {
         const exists = this.links.find(localLink => localLink.url === link.url);
-        if (exists) throw new Error("URL already exists");
+        if (exists && exists.userId === link.userId) throw new Error("URL already exists");
         this.links.push(link);
         return link;
     }
