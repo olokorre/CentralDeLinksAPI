@@ -26,4 +26,10 @@ export default class UserRepositoryMemory implements UserRepository {
         return this.users;
     }
 
+    findById(userId: string): User {
+        const user = this.users.find(user => user.id === userId);
+        if (!user) throw new Error("User not foud");
+        return user;
+    }
+
 }
