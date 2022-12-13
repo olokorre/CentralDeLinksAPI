@@ -26,4 +26,10 @@ export default class LinkRepositoryMemory implements LinkRepository {
         this.links.splice(index, 1);
     }
 
+    findById(linkId: string): Link {
+        const link = this.links.find(localLink => localLink.id === linkId);
+        if (!link) throw new Error("Link not found");
+        return link;
+    }
+
 }

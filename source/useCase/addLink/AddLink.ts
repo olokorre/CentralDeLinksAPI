@@ -15,7 +15,8 @@ export default class AddLink {
     execute(input: AddLinkInput): AddLinkOutput {
         const link = this.linkRepository.save(new Link(input.url, input.description, input.user.id));
         return {
-            url: link.url
+            url: link.url,
+            id: link.id
         }
     }
 

@@ -44,3 +44,16 @@ test("Deve permitir salvar a mesma URL para dois usuários diferentes", function
     linkRepository.save(link2);
     expect(linkRepository.getAll()).toHaveLength(2);
 });
+
+test("Deve buscar um link pelo seu id", function () {
+    const user = new User('olokorre', 'password');
+    const linkRepository = new LinkRepositoryMemory();
+    const link = linkRepository.save(new Link('https://server-foda.com:8006/', 'My proxmox', user.id));
+    const outherLink = linkRepository.findById(link.id);
+    expect(outherLink).toBe(outherLink);
+});
+
+test("Deve disparar um erro ao tentar buscar um link que não existe", function () {
+    const linkRepository = new LinkRepositoryMemory();
+    expect(() => linkRepository.findById('link id :)')).toThrow(new Error("Link not found"));
+});
