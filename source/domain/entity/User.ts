@@ -1,4 +1,4 @@
-import { v4 as uudi } from "uuid";
+import { v4 as uuid } from "uuid";
 
 export default class User {
 
@@ -6,7 +6,7 @@ export default class User {
     readonly password: string;
 
     constructor(readonly nick: string, password: string, id?: string) {
-        if (!id) id = uudi();
+        if (!id) id = uuid();
         this.id = id;
         this.password = password;
     }
