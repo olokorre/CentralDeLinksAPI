@@ -12,8 +12,8 @@ export default class AddLink {
         this.linkRepository = repositoryFactory.createLinkRepository()
     }
 
-    execute(input: AddLinkInput): AddLinkOutput {
-        const link = this.linkRepository.save(new Link(input.url, input.description, input.user.id));
+    async execute(input: AddLinkInput): Promise<AddLinkOutput> {
+        const link = await this.linkRepository.save(new Link(input.url, input.description, input.user.id));
         return {
             url: link.url,
             id: link.id

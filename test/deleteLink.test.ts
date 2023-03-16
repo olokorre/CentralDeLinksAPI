@@ -32,7 +32,7 @@ test("Deve deletar um link", async function () {
     const fakeLink = await createUserAndLink();
     const deleteLink = new DeleteLink(repositoryFactory);
     const linkRepository = repositoryFactory.createLinkRepository();
-    expect(linkRepository.getAll()).toHaveLength(1);
-    deleteLink.execute({linkId: fakeLink.id});
-    expect(linkRepository.getAll()).toHaveLength(0);
+    expect(await linkRepository.getAll()).toHaveLength(1);
+    await deleteLink.execute({linkId: fakeLink.id});
+    expect(await linkRepository.getAll()).toHaveLength(0);
 });

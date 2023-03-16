@@ -15,13 +15,13 @@ test("Deve comprartilhar um link", async function () {
     const linkRepository = repositoryFactory.createLinkRepository();
     const user1 = await userRepository.create(new User("olokorre", "password"));
     const user2 = await userRepository.create(new User("nemo", "password"));
-    const linkUser1 = linkRepository.save(new Link("https://discord.com/", "Discord App", user1.id));
-    expect(linkRepository.getAll()).toHaveLength(1);
+    const linkUser1 = await linkRepository.save(new Link("https://discord.com/", "Discord App", user1.id));
+    expect(await linkRepository.getAll()).toHaveLength(1);
     const shareLink = new ShareLink(repositoryFactory);
     await shareLink.execute({
         user: user1,
         linkId: linkUser1.id,
         userIdToShareLink: user2.id
     });
-    expect(linkRepository.getAll()).toHaveLength(2);
+    expect(await linkRepository.getAll()).toHaveLength(2);
 });

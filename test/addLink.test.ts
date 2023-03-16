@@ -28,6 +28,6 @@ test("Deve um usuário deve logado deve adicionar um link", async function () {
         description: 'Youtube Music'
     }
     const addLink = new AddLink(repositoryFactory);
-    const output = addLink.execute(input);
+    const output = await addLink.execute(input);
     expect(output.url).toBe('https://music.youtube.com/');
 });

@@ -2,9 +2,10 @@ import Link from "../entity/Link";
 
 export default interface LinkRepository {
 
-    save(link: Link): Link;
-    getAll(): Link[];
-    delete(link: Link): void;
-    findById(linkId: string): Link;
+    save(link: Link): Promise<Link>;
+    getAll(): Promise<Link[]>;
+    delete(link: Link): Promise<void>;
+    findById(linkId: string): Promise<Link>;
+    clear(): Promise<void>;
 
 }

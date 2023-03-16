@@ -10,8 +10,8 @@ export default class DeleteLink {
         this.linkRepository = repositoryFactory.createLinkRepository();
     }
 
-    execute(input: DeleteLinkInput): void {
-        const links = this.linkRepository.findById(input.linkId);
+    async execute(input: DeleteLinkInput): Promise<void> {
+        const links = await this.linkRepository.findById(input.linkId);
         this.linkRepository.delete(links);
     }
 
