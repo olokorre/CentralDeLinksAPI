@@ -9,27 +9,33 @@ export default class UserRepositoryMemory implements UserRepository {
         this.users = [];
     }
 
-    findByNick(nick: string): User {
+    async findByNick(nick: string): Promise<User> {
         const user = this.users.find(user => user.nick === nick);
         if (!user) throw new Error("User not foud");
         return user;
     }
     
-    create(user: User): User {
+    async create(user: User): Promise<User> {
         const exists = this.users.find(existentUser => existentUser.nick === user.nick);
         if (exists) throw new Error("Nick already exists");
         this.users.push(user);
         return user;
     }
 
-    getAll(): User[] {
+    async getAll(): Promise<User[]> {
         return this.users;
     }
 
-    findById(userId: string): User {
+    async findById(userId: string): Promise<User> {
         const user = this.users.find(user => user.id === userId);
         if (!user) throw new Error("User not foud");
         return user;
+    }
+
+    async clear(): Promise<void> {
+        const totalUsers = this.users.length;
+        for (let i = 0; i < totalUsers; i++)
+            this.users.pop();
     }
 
 }

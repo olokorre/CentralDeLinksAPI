@@ -10,15 +10,15 @@ beforeEach(function () {
     repositoryFactory = new MemoryRepositoryFactory();
 });
 
-test("Deve comprartilhar um link", function () {
+test("Deve comprartilhar um link", async function () {
     const userRepository = repositoryFactory.createUserRepository();
     const linkRepository = repositoryFactory.createLinkRepository();
-    const user1 = userRepository.create(new User("olokorre", "password"));
-    const user2 = userRepository.create(new User("nemo", "password"));
+    const user1 = await userRepository.create(new User("olokorre", "password"));
+    const user2 = await userRepository.create(new User("nemo", "password"));
     const linkUser1 = linkRepository.save(new Link("https://discord.com/", "Discord App", user1.id));
     expect(linkRepository.getAll()).toHaveLength(1);
     const shareLink = new ShareLink(repositoryFactory);
-    shareLink.execute({
+    await shareLink.execute({
         user: user1,
         linkId: linkUser1.id,
         userIdToShareLink: user2.id

@@ -14,8 +14,8 @@ export default class userIdToShareLink {
         this.linkRepository = repositoryFactory.createLinkRepository();
     }
 
-    execute(input: ShareLinkInput): void {
-        const userToShare = this.userRepository.findById(input.userIdToShareLink);
+    async execute(input: ShareLinkInput): Promise<void> {
+        const userToShare = await this.userRepository.findById(input.userIdToShareLink);
         const link = this.linkRepository.findById(input.linkId);
         const newLink = new Link(link.url, link.description, userToShare.id);
         this.linkRepository.save(newLink);

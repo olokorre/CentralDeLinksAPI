@@ -14,11 +14,11 @@ export default class ShareData {
         this.dataRepository = repositoryFactory.createDataRepository();
     }
 
-    execute(input: ShareDataInput): void {
-        const user2 = this.userRepository.findById(input.userIdToShareData);
+    async execute(input: ShareDataInput): Promise<void> {
+        const user2 = await this.userRepository.findById(input.userIdToShareData);
         let usersData: UsersData;
         try {
-            usersData = this.dataRepository.get(input.user, user2);
+            usersData = await this.dataRepository.get(input.user, user2);
         } catch (e) {
             usersData = new UsersData(input.user, user2);
         }

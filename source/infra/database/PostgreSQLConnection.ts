@@ -10,8 +10,8 @@ export default class PostgreSQLConnection implements Connection {
         this.pgp = pgp()(`postgres://${configDatabase.user}:${configDatabase.password}@${configDatabase.host}:${configDatabase.port}/${configDatabase.database}`);
     }
 
-    execute(statement: string): Promise<any[]> {
-        return this.pgp.query(statement);
+    execute(statement: string, params?: any[]): Promise<any[]> {
+        return this.pgp.query(statement, params);
     }
 
     close(): Promise<void> {

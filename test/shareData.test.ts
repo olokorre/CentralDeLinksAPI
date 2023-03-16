@@ -10,11 +10,11 @@ beforeEach(function () {
     repositoryFactory = new MemoryRepositoryFactory();
 });
 
-test("Deve poder compartilhar um texto com outro usuário", function () {
+test("Deve poder compartilhar um texto com outro usuário", async function () {
     const userRepository = repositoryFactory.createUserRepository();
     const dataRepository = repositoryFactory.createDataRepository();
-    const user1 = userRepository.create(new User("olokorre", "password"));
-    const user2 = userRepository.create(new User("nemo", "password"));
+    const user1 = await userRepository.create(new User("olokorre", "password"));
+    const user2 = await userRepository.create(new User("nemo", "password"));
     dataRepository.save(new UsersData(user1, user2));
     const shareData = new ShareData(repositoryFactory);
     const data = `
@@ -23,7 +23,7 @@ test("Deve poder compartilhar um texto com outro usuário", function () {
         name = input('Your name: ')
         print(f'Hello, {name}')
     `;
-    shareData.execute({
+    await shareData.execute({
         user: user1,
         userIdToShareData: user2.id,
         data: data
@@ -34,11 +34,11 @@ test("Deve poder compartilhar um texto com outro usuário", function () {
     expect(usersData.data).toBe(data);
 });
 
-test("Deve criar um compartilhamento e compartilhar um texto com outro usuário", function () {
+test("Deve criar um compartilhamento e compartilhar um texto com outro usuário", async function () {
     const userRepository = repositoryFactory.createUserRepository();
     const dataRepository = repositoryFactory.createDataRepository();
-    const user1 = userRepository.create(new User("olokorre", "password"));
-    const user2 = userRepository.create(new User("nemo", "password"));
+    const user1 = await userRepository.create(new User("olokorre", "password"));
+    const user2 = await userRepository.create(new User("nemo", "password"));
     expect(dataRepository.getAll()).toHaveLength(0);
     const shareData = new ShareData(repositoryFactory);
     const data = `
@@ -47,7 +47,7 @@ test("Deve criar um compartilhamento e compartilhar um texto com outro usuário"
         name = input('Your name: ')
         print(f'Hello, {name}')
     `;
-    shareData.execute({
+    await shareData.execute({
         user: user1,
         userIdToShareData: user2.id,
         data: data

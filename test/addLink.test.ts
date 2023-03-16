@@ -19,7 +19,7 @@ beforeEach(function () {
 
 test("Deve um usuário deve logado deve adicionar um link", async function () {
     await createUser();
-    const user = repositoryFactory
+    const user = await repositoryFactory
         .createUserRepository()
         .findByNick('olokorre');
     const input = {

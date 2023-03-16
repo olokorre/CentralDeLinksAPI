@@ -2,9 +2,10 @@ import User from "../entity/User";
 
 export default interface UserRepository {
 
-    create(user: User): User;
-    findByNick(nick: string): User;
-    getAll(): User[];
-    findById(userId: string): User;
+    create(user: User): Promise<User>;
+    findByNick(nick: string): Promise<User>;
+    getAll(): Promise<User[]>;
+    findById(userId: string): Promise<User>;
+    clear(): Promise<void>;
 
 }

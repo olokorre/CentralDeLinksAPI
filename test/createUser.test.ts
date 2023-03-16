@@ -29,12 +29,12 @@ test("Não deve criar um usuário com senha inferior a seis caracteres", async f
 
 test("Deve verificar se há registros no repositório", async function () {
     const userRepository = repositoryFactory.createUserRepository();
-    expect(userRepository.getAll()).toHaveLength(0);
+    expect(await userRepository.getAll()).toHaveLength(0);
     const createUser = new CreateUser(repositoryFactory);
     const input = {
         nick: 'olokorre',
         password: 'password'
     }
     await createUser.execute(input);
-    expect(userRepository.getAll()).toHaveLength(1);
+    expect(await userRepository.getAll()).toHaveLength(1);
 });

@@ -1,6 +1,6 @@
 export default interface Connection {
 
-    execute(statement: string): Promise<any[]>;
+    execute(statement: string, params?: any[]): Promise<any[]>;
     close(): Promise<void>;
 
 }

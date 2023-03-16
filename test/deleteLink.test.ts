@@ -10,7 +10,7 @@ const createUserAndLink = async function () {
         nick: "olokorre",
         password: "password"
     });
-    const user = repositoryFactory
+    const user = await repositoryFactory
         .createUserRepository()
         .findByNick('olokorre');
     const input = {
