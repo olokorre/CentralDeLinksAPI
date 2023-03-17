@@ -27,7 +27,7 @@ test("Não deve criar dois usuários com o mesmo nick", async function () {
     const user = new User('olokorre', 'password');
     const userRepository = repositoryFactory.createUserRepository();
     await userRepository.create(user);
-    expect(userRepository.create(user)).rejects.toThrow(new Error("Nick already exists"));
+    await expect(userRepository.create(user)).rejects.toThrow(new Error("Nick already exists"));
 });
 
 afterEach(async function () {
