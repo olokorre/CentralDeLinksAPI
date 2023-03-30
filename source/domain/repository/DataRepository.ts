@@ -3,8 +3,8 @@ import UsersData from "../entity/UsersData";
 
 export default interface DataRepository {
 
-    save(usersData: UsersData): UsersData;
-    get(user1: User, user2: User): UsersData;
-    getAll(): UsersData[];
+    save(usersData: UsersData): Promise<UsersData>;
+    get(user1: User, user2: User): Promise<UsersData>;
+    getAll(): Promise<UsersData[]>;
 
 }
