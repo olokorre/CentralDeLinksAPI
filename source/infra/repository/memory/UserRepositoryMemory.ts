@@ -38,4 +38,11 @@ export default class UserRepositoryMemory implements UserRepository {
             this.users.pop();
     }
 
+    async chageUserPassword(user: User, newPassword: string): Promise<void> {
+        for (const index in this.users) {
+            if (this.users[index].id !== user.id) continue;
+            this.users[index] = new User(user.nick, newPassword, user.id);
+        }
+    }
+
 }

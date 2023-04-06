@@ -45,4 +45,8 @@ export default class UserRepositoryDatabase implements UserRepository {
         await this.connection.execute("delete from public.user");
     }
 
+    async chageUserPassword(user: User, newPassword: string): Promise<void> {
+        await this.connection.execute("update public.user set password = $1 where id = $2", [newPassword, user.id]);
+    }
+
 }
