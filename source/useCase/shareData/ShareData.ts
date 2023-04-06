@@ -23,7 +23,7 @@ export default class ShareData {
             usersData = new UsersData(input.user, user2);
         }
         usersData.update(input.data);
-        this.dataRepository.save(usersData);
+        await this.dataRepository.save(usersData);
     }
 
 }

@@ -12,7 +12,7 @@ export default class DataRepositoryMemoty implements DataRepository {
         this.usersDatas = [];
     }
     
-    save(usersData: UsersData): UsersData {
+    async save(usersData: UsersData): Promise<UsersData> {
         if (!usersData.id) {
             const newUsersData = new UsersData(usersData.user1, usersData.user2, usersData.data, uuid());
             this.usersDatas.push(newUsersData);
@@ -26,14 +26,20 @@ export default class DataRepositoryMemoty implements DataRepository {
         return usersData;
     }
     
-    get(user1: User, user2: User): UsersData {
+    async get(user1: User, user2: User): Promise<UsersData> {
         for (const usersData of this.usersDatas)
             if (user1.id === usersData.user1.id && user2.id === usersData.user2.id) return usersData;
         throw new Error(`UsersData not found for ${user1.nick} and ${user2.nick}`);
     }
 
-    getAll(): UsersData[] {
+    async getAll(): Promise<UsersData[]> {
         return this.usersDatas;
+    }
+
+    async clean(): Promise<void> {
+        const totalItens = this.usersDatas.length;
+        for (let index = 0; index < totalItens; index++)
+            this.usersDatas.pop();
     }
 
 }

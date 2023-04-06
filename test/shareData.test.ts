@@ -28,7 +28,7 @@ test("Deve poder compartilhar um texto com outro usuário", async function () {
         userIdToShareData: user2.id,
         data: data
     });
-    const usersDatas = dataRepository.getAll();
+    const usersDatas = await dataRepository.getAll();
     const [usersData] = usersDatas;
     expect(usersDatas).toHaveLength(1);
     expect(usersData.data).toBe(data);
@@ -39,7 +39,7 @@ test("Deve criar um compartilhamento e compartilhar um texto com outro usuário"
     const dataRepository = repositoryFactory.createDataRepository();
     const user1 = await userRepository.create(new User("olokorre", "password"));
     const user2 = await userRepository.create(new User("nemo", "password"));
-    expect(dataRepository.getAll()).toHaveLength(0);
+    expect(await dataRepository.getAll()).toHaveLength(0);
     const shareData = new ShareData(repositoryFactory);
     const data = `
         #!/bin/python
@@ -52,7 +52,7 @@ test("Deve criar um compartilhamento e compartilhar um texto com outro usuário"
         userIdToShareData: user2.id,
         data: data
     });
-    const usersDatas = dataRepository.getAll();
+    const usersDatas = await dataRepository.getAll();
     const [usersData] = usersDatas;
     expect(usersDatas).toHaveLength(1);
     expect(usersData.data).toBe(data);
