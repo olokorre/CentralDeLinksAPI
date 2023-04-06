@@ -27,3 +27,13 @@ test("Deve logar um usuário recem criado", async function () {
     const output = await loginUser.execute(input);
     expect(output.accessToken).toBeTruthy();
 });
+
+test("Não deve permitir o logim de um usuário com senha incorreta", async function () {
+    await createUser();
+    const loginUser = new LoginUser(repositoryFactory);
+    const input = {
+        nick: "olokorre",
+        password: "drowssap"
+    }
+    await expect(loginUser.execute(input)).rejects.toThrow(new Error("Invalid credentials"));
+});

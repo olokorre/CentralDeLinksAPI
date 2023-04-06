@@ -30,6 +30,16 @@ test("Não deve criar dois usuários com o mesmo nick", async function () {
     await expect(userRepository.create(user)).rejects.toThrow(new Error("Nick already exists"));
 });
 
+test("Deve alterar a senha de um usuário no repositório", async function () {
+    const userRepository = repositoryFactory.createUserRepository();
+    let user = new User('olokorre', 'password');
+    await userRepository.create(user);
+    await userRepository.chageUserPassword(user, 'new_password_strong');
+    user = await userRepository.findByNick('olokorre');
+    expect(user.password).toBe('new_password_strong');
+    expect(user.password).not.toBe('password');
+});
+
 afterEach(async function () {
     await connection.close();
 });
