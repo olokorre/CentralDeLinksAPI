@@ -36,4 +36,10 @@ export default class DataRepositoryMemoty implements DataRepository {
         return this.usersDatas;
     }
 
+    async clean(): Promise<void> {
+        const totalItens = this.usersDatas.length;
+        for (let index = 0; index < totalItens; index++)
+            this.usersDatas.pop();
+    }
+
 }
