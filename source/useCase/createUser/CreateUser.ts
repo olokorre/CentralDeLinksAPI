@@ -19,7 +19,7 @@ export default class CreateUser {
         if (input.password.length < 6) throw new Error("Invalid password");
         const encryptPassword = await hash(input.password, 10);
         const user = new User(input.nick, encryptPassword);
-        this.userRepository.create(user);
+        await this.userRepository.create(user);
         const privateKey = readFileSync('./private.key');
         const payload = {
             userId: user.id,
