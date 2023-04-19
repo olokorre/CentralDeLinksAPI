@@ -14,7 +14,7 @@ test("Deve criar um dado compartilhado entre dois usuários", function () {
     expect(usersData.data).toBe(data);
 });
 
-test("Deve Alterar o dado compartilhado", function () {
+test("Deve alterar o dado compartilhado", function () {
     const user1 = new User("olokorre", "password");
     const user2 = new User("nemo", "password");
     const usersData = new UsersData(user1, user2);

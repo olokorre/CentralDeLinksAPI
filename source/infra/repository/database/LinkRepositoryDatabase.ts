@@ -1,4 +1,5 @@
 import Link from "../../../domain/entity/Link";
+import User from "../../../domain/entity/User";
 import LinkRepository from "../../../domain/repository/LinkRepository";
 import Connection from "../../database/Connection";
 
@@ -49,6 +50,14 @@ export default class LinkRepositoryDatabase implements LinkRepository {
     
     async clear(): Promise<void> {
         await this.connection.execute("delete from public.link");
+    }
+
+    async getAllByUser(user: User): Promise<Link[]> {
+        const linksData = await this.connection.execute("select id, description, url, user_id from public.link where user_id = $1", [user.id]);
+        const links = [];
+        for (const linkData of linksData)
+            links.push(this.mount(linkData));
+        return links;
     }
 
 }

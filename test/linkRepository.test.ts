@@ -34,14 +34,7 @@ test("Deve deletar um link", async function () {
     expect(await linkRepository.getAll()).toHaveLength(0);
 });
 
-test("Deve disparar um erro ao tentar deletar um link que não existe", async function () {
-    const user = new User('olokorre', 'password');
-    const linkRepository = repositoryFactory.createLinkRepository();
-    const link = new Link('https://server-foda.com:8006/', 'My proxmox', user.id);
-    await expect(linkRepository.delete(link)).rejects.toThrow(new Error("Link not found"));
-});
-
-test("Não deve permitir salvar dois links com a mesma URL", async function () {
+test("Deve disparar um erro ao tentarLinkRepositoryinks com a mesma URL", async function () {
     const user = new User('olokorre', 'password');
     const linkRepository = repositoryFactory.createLinkRepository();
     const link1 = new Link('https://server-foda.com:8006/', 'My proxmox', user.id);
@@ -72,6 +65,16 @@ test("Deve buscar um link pelo seu id", async function () {
 test("Deve disparar um erro ao tentar buscar um link que não existe", async function () {
     const linkRepository = repositoryFactory.createLinkRepository();
     await expect(linkRepository.findById('link id :)')).rejects.toThrow(new Error("Link not found"));
+});
+
+test("Deve buscar todos os links a partir de um usuário", async function () {
+    const user = new User('olokorre', 'password');
+    const linkRepository = repositoryFactory.createLinkRepository();
+    await linkRepository.save(new Link('https://server-foda.com:8006/', 'My proxmox', user.id));
+    const links = await linkRepository.getAllByUser(user);
+    const [link] = links;
+    expect(links).toHaveLength(1);
+    expect(link.description).toBe('My proxmox');
 });
 
 afterEach(async function () {

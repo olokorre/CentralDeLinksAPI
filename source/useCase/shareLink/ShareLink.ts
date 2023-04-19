@@ -4,7 +4,7 @@ import RepositoryFactory from "../../domain/repository/RepositoryFactory";
 import UserRepository from "../../domain/repository/UserRepository";
 import ShareLinkInput from "./ShareLinkInput";
 
-export default class userIdToShareLink {
+export default class ShareLink {
 
     readonly userRepository: UserRepository;
     readonly linkRepository: LinkRepository;
