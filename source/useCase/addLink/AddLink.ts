@@ -16,6 +16,7 @@ export default class AddLink {
         const link = await this.linkRepository.save(new Link(input.url, input.description, input.user.id));
         return {
             url: link.url,
+            description: link.description,
             id: link.id
         }
     }

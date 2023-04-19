@@ -1,4 +1,5 @@
 import Link from "../../../domain/entity/Link";
+import User from "../../../domain/entity/User";
 import LinkRepository from "../../../domain/repository/LinkRepository";
 
 export default class LinkRepositoryMemory implements LinkRepository {
@@ -36,6 +37,15 @@ export default class LinkRepositoryMemory implements LinkRepository {
         const totalLinks = this.links.length;
         for (let index = 0; index < totalLinks; index++)
             this.links.pop();
+    }
+
+    async getAllByUser(user: User): Promise<Link[]> {
+        const links = [];
+        for (const link of this.links) {
+            if (link.userId != user.id) continue;
+            links.push(link);
+        }
+        return links;
     }
 
 }

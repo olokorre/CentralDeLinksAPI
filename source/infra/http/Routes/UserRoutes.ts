@@ -1,8 +1,9 @@
 import RepositoryFactory from "../../../domain/repository/RepositoryFactory";
 import UserController from "../../controller/UserController";
 import Http from "../Http";
+import ModelRoutes from "./ModelRoutes";
 
-export default class UserRoutes {
+export default class UserRoutes implements ModelRoutes {
 
     protected userController: UserController;
 
