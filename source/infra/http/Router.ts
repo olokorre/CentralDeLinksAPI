@@ -16,7 +16,7 @@ export default class Router {
 	}
 
 	init() {
-		this.http.route("get", "/", false, async (params: any, body: any) => {
+		this.http.route("get", "/", true, async (params: any, body: any) => {
 			return {
 				message: "welcome"
 			}

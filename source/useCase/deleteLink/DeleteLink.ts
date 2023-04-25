@@ -12,7 +12,7 @@ export default class DeleteLink {
 
     async execute(input: DeleteLinkInput): Promise<void> {
         const links = await this.linkRepository.findById(input.linkId);
-        this.linkRepository.delete(links);
+        await this.linkRepository.delete(links);
     }
 
 }

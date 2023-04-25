@@ -4,6 +4,9 @@ import ChangePasswordInput from "../../useCase/changePassword/ChangePasswordInpu
 import CreateUser from "../../useCase/createUser/CreateUser";
 import CreateUserInput from "../../useCase/createUser/CreateUserInput";
 import CreateUserOutput from "../../useCase/createUser/CreateUserOutput";
+import GetOuserOutput from "../../useCase/getUser/GetOuserOutput";
+import GetUser from "../../useCase/getUser/GetUser";
+import GetUserInput from "../../useCase/getUser/GetUserInput";
 import LoginUser from "../../useCase/loginUser/LoginUser";
 import LoginUserInput from "../../useCase/loginUser/LoginUserInput";
 import LoginUserOutput from "../../useCase/loginUser/LoginUserOutput";
@@ -29,6 +32,11 @@ export default class UserController {
         return {
             "message": "Password changed"
         }
+    }
+
+    async getUser(input: GetUserInput): Promise<GetOuserOutput> {
+        const getUser = new GetUser();
+        return await getUser.execute(input);
     }
 
 }
