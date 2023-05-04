@@ -47,5 +47,12 @@ export default class LinkRepositoryMemory implements LinkRepository {
         }
         return links;
     }
+    
+    async update(link: Link): Promise<Link> {
+        await this.findById(link.id);
+        const index = this.links.indexOf(link);
+        this.links[index] = link;
+        return link;
+    }
 
 }

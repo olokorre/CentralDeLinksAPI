@@ -27,6 +27,10 @@ export default class LinkRoutes implements ModelRoutes {
         this.http.route("post", "/links/share", true, async (params: any, body: any) => {
             return await this.linkController.shareLink(body);
         });
+
+        this.http.route("put", "/links/change-description", true, async (params: any, body: any) => {
+            return await this.linkController.changeDescription(body);
+        });
     }
 
 }

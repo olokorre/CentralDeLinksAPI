@@ -13,7 +13,7 @@ let repositoryFactory: RepositoryFactory;
 
 beforeEach(async function () {
     connection = new PostgreSQLConnection(configDatabase);
-    repositoryFactory = new DatabaseRepositoryFactory(connection);
+    repositoryFactory = new MemoryRepositoryFactory();
     const linkRepository = repositoryFactory.createLinkRepository();
     await linkRepository.clear();
 });
@@ -75,6 +75,23 @@ test("Deve buscar todos os links a partir de um usuário", async function () {
     const [link] = links;
     expect(links).toHaveLength(1);
     expect(link.description).toBe('My proxmox');
+});
+
+test("Deve criar um link e renomea-lo", async function () {
+    const user = new User('olokorre', 'password');
+    const linkRepository = repositoryFactory.createLinkRepository();
+    let link = await linkRepository.save(new Link('https://server-foda.com:8006/', 'My proxmox', user.id));
+    link.changeDescription('Meu servidor');
+    link = await linkRepository.update(link);
+    expect(link.description).toBe('Meu servidor');
+});
+
+test("Deve criar um link e renomea-lo", async function () {
+    const user = new User('olokorre', 'password');
+    const linkRepository = repositoryFactory.createLinkRepository();
+    let link = new Link('https://server-foda.com:8006/', 'My proxmox', user.id);
+    link.changeDescription('Meu servidor');
+    await expect(linkRepository.update(link)).rejects.toThrow(new Error('Link not found'));
 });
 
 afterEach(async function () {
