@@ -16,3 +16,11 @@ test("Não deve permitir a criação de um link com URL inválida", function () 
 test("Não deve permitir criar um link com usuário inválido", function () {
     expect(() => new Link('https://server-foda.com:8006/', 'My proxmox', 'userId')).toThrow(new Error("Invalid UserID"));
 });
+
+test("Deve mudar a descrição de um link", function () {
+    const user = new User('olokorre', 'password');
+    const link = new Link('https://server-foda.com:8006/', 'My proxmox', user.id);
+    link.changeDescription('Meu servidor');
+    expect(link.description).toBe('Meu servidor');
+});
+

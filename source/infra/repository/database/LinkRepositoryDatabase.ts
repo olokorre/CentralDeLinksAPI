@@ -60,4 +60,10 @@ export default class LinkRepositoryDatabase implements LinkRepository {
         return links;
     }
 
+    async update(link: Link): Promise<Link> {
+        await this.findById(link.id);
+        await this.connection.execute("update public.link set description = $1 where id = $2", [link.description, link.id]);
+        return link;
+    }
+
 }
