@@ -23,7 +23,9 @@ export default class UserRepositoryDatabase implements UserRepository {
     }
     
     async findByNick(nick: string): Promise<User> {
-        const [userData] = await this.connection.execute("select id, nick, password from public.user where nick = $1", [nick]);
+        const result = await this.connection.execute("select id, nick, password from public.user where nick = $1", [nick]);
+        if (!result.length) throw new Error("User not foud");
+        const [userData] = result;
         return this.mount(userData);
     }
     
