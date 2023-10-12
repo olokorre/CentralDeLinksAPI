@@ -30,6 +30,7 @@ export default class ExpressHttp implements Http {
 				const result = await callback(req.params, req.body);
 				res.json(result);
 			} catch (exception: any) {
+				console.error(exception);
 				res.status(422).json({
 					message: exception.message
 				});
