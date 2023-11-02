@@ -26,6 +26,6 @@
   "scripts": {
     "test": "jest --runInBand test/",
     "clean": "rm -rf dist/*/",
-    "main": "tsc && node ./dist/source/main"
+    "main": "tsc && node ./dist/main"
   }
 }
