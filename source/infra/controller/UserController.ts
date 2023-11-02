@@ -10,6 +10,9 @@ import GetUserInput from "../../useCase/getUser/GetUserInput";
 import LoginUser from "../../useCase/loginUser/LoginUser";
 import LoginUserInput from "../../useCase/loginUser/LoginUserInput";
 import LoginUserOutput from "../../useCase/loginUser/LoginUserOutput";
+import SearchUsers from "../../useCase/searchUsers/SearchUsers";
+import SearchUsersInput from "../../useCase/searchUsers/SearchUsersInput";
+import SearchUsersOutput from "../../useCase/searchUsers/SearchUsersOutput";
 
 export default class UserController {
 
@@ -37,6 +40,11 @@ export default class UserController {
     async getUser(input: GetUserInput): Promise<GetOuserOutput> {
         const getUser = new GetUser();
         return await getUser.execute(input);
+    }
+
+    async search(input: SearchUsersInput): Promise<SearchUsersOutput[]> {
+        const searchUsers = new SearchUsers(this.repositoryFactory);
+        return await searchUsers.execute(input);
     }
 
 }

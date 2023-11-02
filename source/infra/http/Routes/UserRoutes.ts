@@ -27,6 +27,10 @@ export default class UserRoutes implements ModelRoutes {
         this.http.route("post", "/auth/me", true, async (params: any, body: any) => {
             return await this.userController.getUser(body);
         });
+
+        this.http.route("post", "/user/search", true, async (params: any, body: any) => {
+            return await this.userController.search(body);
+        });
     }
 
 }
