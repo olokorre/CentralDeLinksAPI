@@ -45,4 +45,9 @@ export default class UserRepositoryMemory implements UserRepository {
         }
     }
 
+    async search(nick: string): Promise<User[]> {
+        const filter = new RegExp(`^.*${nick}.*`, "g");
+        return this.users.filter(user => user.nick.match(filter));
+    }
+
 }

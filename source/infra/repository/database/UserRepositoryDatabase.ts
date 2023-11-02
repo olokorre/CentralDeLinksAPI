@@ -51,4 +51,12 @@ export default class UserRepositoryDatabase implements UserRepository {
         await this.connection.execute("update public.user set password = $1 where id = $2", [newPassword, user.id]);
     }
 
+     async search(nick: string): Promise<User[]> {
+        const dataUsers = await this.connection.execute("select id, nick, password from public.user where nick like $1", [`%${nick}%`]);
+        const users = [];
+        for (const dataUser of dataUsers)
+            users.push(this.mount(dataUser));
+        return users;
+    }
+
 }
