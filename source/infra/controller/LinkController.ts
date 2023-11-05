@@ -6,6 +6,9 @@ import ChangeDescription from "../../useCase/changeDescription/ChangeDescription
 import ChangeDescriptionInput from "../../useCase/changeDescription/ChangeDescriptionInput";
 import DeleteLink from "../../useCase/deleteLink/DeleteLink";
 import DeleteLinkInput from "../../useCase/deleteLink/DeleteLinkInput";
+import GetLink from "../../useCase/getLink/GetLink";
+import GetLinkInput from "../../useCase/getLink/GetLinkInput";
+import GetLinkOutput from "../../useCase/getLink/GetLinkOutput";
 import GetLinks from "../../useCase/getLinks/GetLinks";
 import GetLinksInput from "../../useCase/getLinks/GetLinksInput";
 import GetLinksOutput from "../../useCase/getLinks/GetLinksOutput";
@@ -49,6 +52,11 @@ export default class LinkController {
         return {
             message: "ok"
         }
+    }
+
+    async getLink(input: GetLinkInput): Promise<GetLinkOutput> {
+        const getLink = new GetLink(this.repositoryFactory);
+        return await getLink.execute(input);
     }
 
 }

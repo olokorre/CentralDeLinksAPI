@@ -1,6 +1,7 @@
 import express from "express";
 import Auth from "./middleware/Auth";
 import Http from "./Http";
+import HttpMethods from "./HttpMethods";
 
 export default class ExpressHttp implements Http {
 	
@@ -24,7 +25,7 @@ export default class ExpressHttp implements Http {
 		this.auth = auth
 	}
 
-	private async publicRoutes(method: string, url: string, callback: any): Promise<any> {
+	private async publicRoutes(method: HttpMethods, url: string, callback: any): Promise<any> {
 		this.app[method](url, async function (req: any, res: any) {
 			try {
 				const result = await callback(req.params, req.body);
@@ -51,7 +52,7 @@ export default class ExpressHttp implements Http {
 		});
 	}
 	
-	async route(method: string, url: string, auth: boolean, callback: any): Promise<any> {
+	async route(method: HttpMethods, url: string, auth: boolean, callback: any): Promise<any> {
 		if (auth) this.privateRoutes(method, url, callback);
 		else this.publicRoutes(method, url, callback);
 	}
