@@ -1,0 +1,30 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model link {
+  id          String @id(map: "link_pk") @db.VarChar
+  description String @db.VarChar
+  url         String @db.VarChar
+  user_id     String @db.VarChar
+
+  @@unique([url, user_id], map: "link_url_idx")
+}
+
+model user {
+  id       String @id(map: "user_pk") @db.VarChar
+  nick     String @db.VarChar
+  password String @db.VarChar
+
+  @@unique([id, nick], map: "user_id_nick_idx")
+}
+
+model users_data {
+  id       String @db.Uuid @id
+  user1_id String @db.VarChar
+  user2_id String @db.VarChar
+  data     String
+
+  @@unique([id])
+}
