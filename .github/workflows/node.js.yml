@@ -10,9 +10,26 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  Test:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     strategy:
       matrix:
@@ -20,10 +37,20 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm test
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npx prisma push
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+      - run: npm test
+        env:
+          USER: postgres
+          PASSWORD: postgres
+          DATABASE: postgres
+          HOST: localhost
+          PORT: 5432
