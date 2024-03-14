@@ -1,9 +1,13 @@
+import { config } from "dotenv";
+
+config();
+
 const configDatabase = {
-    user: 'postegre',
-    password: 'postegre',
-    database: 'test',
-    host: 'localhost',
-    port: '5432'
+    user: process.env.USER ?? '',
+    password: process.env.PASSWORD ?? '',
+    database: process.env.DATABASE ?? '',
+    host: process.env.HOST ?? '',
+    port: process.env.PORT ?? ''
 }
 
 export default configDatabase;
