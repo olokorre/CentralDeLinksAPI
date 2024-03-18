@@ -23,4 +23,3 @@ test("Deve mudar a descrição de um link", function () {
     link.changeDescription('Meu servidor');
     expect(link.description).toBe('Meu servidor');
 });
-
