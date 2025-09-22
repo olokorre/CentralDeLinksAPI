@@ -13,7 +13,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg-promise": "^11.11.0",
     "prisma": "^5.14.0",
-    "ts-jest": "^29.2.6",
+    "ts-jest": "^29.4.1",
     "typescript": "^4.9.5",
     "uuid": "^9.0.1"
   },
