@@ -6,6 +6,7 @@ export default interface DataRepository {
     save(usersData: UsersData): Promise<UsersData>;
     get(user1: User, user2: User): Promise<UsersData>;
     getAll(): Promise<UsersData[]>;
+    getAllByUser(user: User): Promise<UsersData[]>;
     clean(): Promise<void>;
 
 }

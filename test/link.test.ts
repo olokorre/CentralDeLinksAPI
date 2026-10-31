@@ -1,5 +1,6 @@
 import Link from "../source/domain/entity/Link";
 import User from "../source/domain/entity/User";
+import ValidationError from "../source/domain/error/ValidationError";
 
 test("Deve criar um link simples que pertence a um usuário", function () {
     const user = new User('olokorre', 'password');
@@ -10,7 +11,15 @@ test("Deve criar um link simples que pertence a um usuário", function () {
 
 test("Não deve permitir a criação de um link com URL inválida", function () {
     const user = new User('olokorre', 'password');
-    expect(() => new Link('test', 'My proxmox', user.id)).toThrow(new Error('Invalid URL'));
+    expect(() => new Link('test', 'My proxmox', user.id)).toThrow(new ValidationError('Invalid URL'));
+});
+
+test("Não deve permitir a criação de um link com esquema diferente de http e https", function () {
+    const user = new User('olokorre', 'password');
+    expect(() => new Link('ftp://server-foda.com:8006/', 'My proxmox', user.id))
+        .toThrow(new ValidationError('URL must be http or https'));
+    expect(() => new Link('file:///etc/passwd', 'My proxmox', user.id))
+        .toThrow(new ValidationError('URL must be http or https'));
 });
 
 test("Não deve permitir criar um link com usuário inválido", function () {

@@ -22,5 +22,6 @@ const http = new ExpressHttp(auth);
 const router = new Router(http, repositoryFactory);
 
 router.init();
-http.listen(5001);
-console.log('Running...');
+const port = Number(process.env.PORT ?? 5001);
+http.listen(port);
+console.log(`Running on port ${port}...`);

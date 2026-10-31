@@ -2,6 +2,7 @@ import { hash } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { readFileSync } from "fs";
 import User from "../../domain/entity/User";
+import ValidationError from "../../domain/error/ValidationError";
 import CreateUserInput from "./CreateUserInput";
 import CreateUserOutput from "./CreateUserOutput";
 import RepositoryFactory from "../../domain/repository/RepositoryFactory";
@@ -16,9 +17,13 @@ export default class CreateUser {
     }
 
     async execute(input: CreateUserInput): Promise<CreateUserOutput> {
-        if (input.password.length < 6) throw new Error("Invalid password");
+        const nick = input.nick?.trim() ?? "";
+        if (!nick) throw new ValidationError("Nick is required");
+        if (nick.length < 3 || nick.length > 30) throw new ValidationError("Nick must be between 3 and 30 characters");
+        if (!/^[\w.-]+$/.test(nick)) throw new ValidationError("Nick must contain only letters, numbers, dot, hyphen and underscore");
+        if (input.password.length < 6) throw new ValidationError("Invalid password");
         const encryptPassword = await hash(input.password, 10);
-        const user = new User(input.nick, encryptPassword);
+        const user = new User(nick, encryptPassword);
         await this.userRepository.create(user);
         const privateKey = readFileSync('./private.key');
         const payload = {

@@ -1,4 +1,4 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# This workflow will do a clean installation of node dependencies, cache/restore the build and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Teste Central
@@ -22,7 +22,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
           POSTGRES_DB: postgres
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
 
         options: >-
           --health-cmd pg_isready
@@ -45,13 +44,16 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-      - run: npx prisma db push
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+      - name: Generate JWT keys
+        run: |
+          openssl genrsa -out private.key 2048
+          openssl rsa -in private.key -pubout -out public.key
+      - name: Create database schema
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -f database.sql
       - run: npm test
         env:
-          USER: postgres
-          PASSWORD: postgres
+          DB_USER: postgres
+          DB_PASSWORD: postgres
           DATABASE: postgres
-          HOST: localhost
-          PORT: 5432
+          DB_HOST: localhost
+          DB_PORT: 5432

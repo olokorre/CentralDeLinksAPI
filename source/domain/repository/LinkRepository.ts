@@ -8,7 +8,7 @@ export default interface LinkRepository {
     delete(link: Link): Promise<void>;
     findById(linkId: string): Promise<Link>;
     clear(): Promise<void>;
-    getAllByUser(user: User): Promise<Link[]>;
+    getAllByUser(user: User, page?: number, limit?: number): Promise<Link[]>;
     update(link: Link): Promise<Link>;
 
 }

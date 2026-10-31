@@ -1,5 +1,7 @@
 import User from "../../../domain/entity/User";
 import UserRepository from "../../../domain/repository/UserRepository";
+import NotFoundError from "../../../domain/error/NotFoundError";
+import ValidationError from "../../../domain/error/ValidationError";
 
 export default class UserRepositoryMemory implements UserRepository {
 
@@ -11,13 +13,13 @@ export default class UserRepositoryMemory implements UserRepository {
 
     async findByNick(nick: string): Promise<User> {
         const user = this.users.find(user => user.nick === nick);
-        if (!user) throw new Error("User not foud");
+        if (!user) throw new NotFoundError("User not found");
         return user;
     }
-    
+
     async create(user: User): Promise<User> {
         const exists = this.users.find(existentUser => existentUser.nick === user.nick);
-        if (exists) throw new Error("Nick already exists");
+        if (exists) throw new ValidationError("Nick already exists");
         this.users.push(user);
         return user;
     }
@@ -28,7 +30,7 @@ export default class UserRepositoryMemory implements UserRepository {
 
     async findById(userId: string): Promise<User> {
         const user = this.users.find(user => user.id === userId);
-        if (!user) throw new Error("User not foud");
+        if (!user) throw new NotFoundError("User not found");
         return user;
     }
 
@@ -45,9 +47,10 @@ export default class UserRepositoryMemory implements UserRepository {
         }
     }
 
-    async search(nick: string): Promise<User[]> {
-        const filter = new RegExp(`^.*${nick}.*`, "g");
-        return this.users.filter(user => user.nick.match(filter));
+    async search(nick: string, page?: number, limit?: number): Promise<User[]> {
+        const users = this.users.filter(user => user.nick.includes(nick));
+        if (page === undefined || limit === undefined) return users;
+        return users.slice((page - 1) * limit, page * limit);
     }
 
 }

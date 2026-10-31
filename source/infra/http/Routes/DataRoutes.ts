@@ -10,10 +10,21 @@ export default class DataRoutes implements ModelRoutes {
     constructor(readonly http: Http, repositoryFactory: RepositoryFactory) {
         this.dataController = new DataController(repositoryFactory);
     }
-    
+
     init(): void {
         this.http.route("post", "/data/share", true, async (params: any, body: any) => {
             return this.dataController.shareData(body);
+        });
+
+        this.http.route("get", "/data/shared", true, async (params: any, body: any) => {
+            return this.dataController.getShared(body);
+        });
+
+        this.http.route("get", "/data/shared/:userId", true, async (params: any, body: any) => {
+            return this.dataController.getSharedWithUser({
+                ...body,
+                userId: params.userId
+            });
         });
     }
 

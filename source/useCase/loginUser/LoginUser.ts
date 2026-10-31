@@ -3,6 +3,8 @@ import { readFileSync } from "fs";
 import { sign } from "jsonwebtoken";
 import RepositoryFactory from "../../domain/repository/RepositoryFactory";
 import UserRepository from "../../domain/repository/UserRepository";
+import NotFoundError from "../../domain/error/NotFoundError";
+import UnauthorizedError from "../../domain/error/UnauthorizedError";
 import LoginUserInput from "./LoginUserInput";
 import LoginUserOutput from "./LoginUserOutput";
 
@@ -15,9 +17,15 @@ export default class LoginUser {
     }
 
     async execute(input: LoginUserInput): Promise<LoginUserOutput> {
-        const user = await this.userRepository.findByNick(input.nick);
+        let user;
+        try {
+            user = await this.userRepository.findByNick(input.nick);
+        } catch (error) {
+            if (error instanceof NotFoundError) throw new UnauthorizedError("Invalid credentials");
+            throw error;
+        }
         const isEqual = await compare(input.password, user.password);
-        if (!isEqual) throw new Error("Invalid credentials");
+        if (!isEqual) throw new UnauthorizedError("Invalid credentials");
         const privateKey = readFileSync('./private.key');
         const payload = {
             userId: user.id,

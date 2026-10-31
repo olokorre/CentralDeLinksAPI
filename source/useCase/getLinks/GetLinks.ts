@@ -1,5 +1,6 @@
 import LinkRepository from "../../domain/repository/LinkRepository";
 import RepositoryFactory from "../../domain/repository/RepositoryFactory";
+import parsePagination from "../../domain/validation/parsePagination";
 import GetLinksInput from "./GetLinksInput";
 import GetLinksOutput from "./GetLinksOutput";
 
@@ -12,7 +13,8 @@ export default class GetLinks {
     }
 
     async execute(input: GetLinksInput): Promise<GetLinksOutput> {
-        const links = await this.linkRepository.getAllByUser(input.user);
+        const { page, limit } = parsePagination(input.page, input.limit);
+        const links = await this.linkRepository.getAllByUser(input.user, page, limit);
         const formatedLinks = [];
         for (const link of links) formatedLinks.push({
             id: link.id,
@@ -22,7 +24,7 @@ export default class GetLinks {
         return {
             links: formatedLinks
         }
-        
+
     }
 
 }

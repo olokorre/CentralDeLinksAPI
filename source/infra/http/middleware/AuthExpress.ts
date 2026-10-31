@@ -15,7 +15,7 @@ export default class ExpressAuth implements Auth {
     async execute(request: any, response: any, next: any): Promise<any> {
         if (!request.headers || !request.headers['access-token']) {
             return response.status(403).json({
-                message: 'Token is required'
+                error: 'Token is required'
             });
         }
         const token = request.headers['access-token'];
@@ -23,11 +23,12 @@ export default class ExpressAuth implements Auth {
             const publicKey = readFileSync('./public.key', 'utf8');
             const data = verify(token, publicKey, { algorithms: ["RS256"] }); // @ts-ignore
             const user = await this.userRepository.findById(data.userId);
+            request.body = request.body ?? {};
             request.body.user = user;
             return next();
         } catch (e) {
             return response.status(401).json({
-                message: 'Invalid token'
+                error: 'Invalid token'
             });
         }
     }

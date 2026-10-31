@@ -1,5 +1,6 @@
 import LinkRepository from "../../domain/repository/LinkRepository";
 import RepositoryFactory from "../../domain/repository/RepositoryFactory";
+import NotFoundError from "../../domain/error/NotFoundError";
 import GetLinkInput from "./GetLinkInput";
 import GetLinkOutput from "./GetLinkOutput";
 
@@ -14,7 +15,7 @@ export default class GetLink {
     async execute(input: GetLinkInput): Promise<GetLinkOutput> {
         const link = await this.linkRepository.findById(input.linkId);
         if (link.userId !== input.user.id)
-            throw new Error("Link not found");
+            throw new NotFoundError("Link not found");
         return {
             id: link.id,
             description: link.description,
