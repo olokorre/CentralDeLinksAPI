@@ -43,7 +43,7 @@ export default class UserRepositoryMemory implements UserRepository {
     async chageUserPassword(user: User, newPassword: string): Promise<void> {
         for (const index in this.users) {
             if (this.users[index].id !== user.id) continue;
-            this.users[index] = new User(user.nick, newPassword, user.id);
+            this.users[index] = new User(user.nick, newPassword, user.id, user.bio, user.createdAt);
         }
     }
 
@@ -51,6 +51,13 @@ export default class UserRepositoryMemory implements UserRepository {
         const users = this.users.filter(user => user.nick.includes(nick));
         if (page === undefined || limit === undefined) return users;
         return users.slice((page - 1) * limit, page * limit);
+    }
+
+    async updateBio(user: User, newBio: string): Promise<void> {
+        for (const index in this.users) {
+            if (this.users[index].id !== user.id) continue;
+            this.users[index] = new User(user.nick, user.password, user.id, newBio, user.createdAt);
+        }
     }
 
 }

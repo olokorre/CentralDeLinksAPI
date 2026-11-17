@@ -10,5 +10,7 @@ export default interface LinkRepository {
     clear(): Promise<void>;
     getAllByUser(user: User, page?: number, limit?: number): Promise<Link[]>;
     update(link: Link): Promise<Link>;
+    getPublicLinksByUser(user: User): Promise<Link[]>;
+    getPublicLinksByUsers(userIds: string[], page?: number, limit?: number): Promise<Link[]>;
 
 }

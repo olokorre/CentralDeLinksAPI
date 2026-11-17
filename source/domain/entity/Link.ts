@@ -9,7 +9,7 @@ export default class Link {
     readonly userId: string;
     private _description: string;
 
-    constructor(url: string, description: string, userId: string, id?: string) {
+    constructor(url: string, description: string, userId: string, id?: string, private _isPublic: boolean = false, readonly createdAt: Date = new Date()) {
         if (!id) id = uuid_v4();
         this.id = id;
         let parsedUrl: URL;
@@ -30,10 +30,17 @@ export default class Link {
         return this._description;
     }
 
+    get isPublic() {
+        return this._isPublic;
+    }
+
     changeDescription(description: string): void {
         if (description.length > 255) throw new ValidationError("Description too long");
         this._description = description;
     }
 
-}
+    changeIsPublic(isPublic: boolean): void {
+        this._isPublic = isPublic;
+    }
 
+}

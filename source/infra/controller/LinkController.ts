@@ -4,6 +4,8 @@ import AddLinkInput from "../../useCase/addLink/AddLinkInput";
 import AddLinkOutput from "../../useCase/addLink/AddLinkOutput";
 import ChangeDescription from "../../useCase/changeDescription/ChangeDescription";
 import ChangeDescriptionInput from "../../useCase/changeDescription/ChangeDescriptionInput";
+import ChangeVisibility from "../../useCase/changeVisibility/ChangeVisibility";
+import ChangeVisibilityInput from "../../useCase/changeVisibility/ChangeVisibilityInput";
 import DeleteLink from "../../useCase/deleteLink/DeleteLink";
 import DeleteLinkInput from "../../useCase/deleteLink/DeleteLinkInput";
 import GetLink from "../../useCase/getLink/GetLink";
@@ -49,6 +51,14 @@ export default class LinkController {
     async changeDescription(input: ChangeDescriptionInput): Promise<object> {
         const changeDescription = new ChangeDescription(this.repositoryFactory);
         await changeDescription.execute(input);
+        return {
+            message: "ok"
+        }
+    }
+
+    async changeVisibility(input: ChangeVisibilityInput): Promise<object> {
+        const changeVisibility = new ChangeVisibility(this.repositoryFactory);
+        await changeVisibility.execute(input);
         return {
             message: "ok"
         }
