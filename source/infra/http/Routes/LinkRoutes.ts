@@ -32,6 +32,10 @@ export default class LinkRoutes implements ModelRoutes {
             return await this.linkController.changeDescription(body);
         });
 
+        this.http.route("put", "/links/change-visibility", true, async (params: any, body: any) => {
+            return await this.linkController.changeVisibility(body);
+        });
+
         this.http.route("get", "/links/get/:id", true, async (params: any, body: any) => {
             return await this.linkController.getLink({
                 ...body,

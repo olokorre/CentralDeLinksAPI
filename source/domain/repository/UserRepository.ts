@@ -8,6 +8,7 @@ export default interface UserRepository {
     findById(userId: string): Promise<User>;
     clear(): Promise<void>;
     chageUserPassword(user: User, newPassword: string): Promise<void>;
+    updateBio(user: User, newBio: string): Promise<void>;
     search(nick: string, page?: number, limit?: number): Promise<User[]>;
 
 }

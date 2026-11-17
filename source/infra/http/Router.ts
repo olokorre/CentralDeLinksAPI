@@ -1,18 +1,24 @@
 import RepositoryFactory from "../../domain/repository/RepositoryFactory";
 import Http from "./Http";
 import DataRoutes from "./Routes/DataRoutes";
+import FeedRoutes from "./Routes/FeedRoutes";
 import LinkRoutes from "./Routes/LinkRoutes";
+import ProfileRoutes from "./Routes/ProfileRoutes";
 import UserRoutes from "./Routes/UserRoutes";
 export default class Router {
 
 	protected userRoutes: UserRoutes;
 	protected linkRoutes: LinkRoutes;
 	protected dataRoutes: DataRoutes;
+	protected profileRoutes: ProfileRoutes;
+	protected feedRoutes: FeedRoutes;
 
 	constructor(readonly http: Http, readonly repositoryFactory: RepositoryFactory) {
 		this.userRoutes = new UserRoutes(this.http, this.repositoryFactory);
 		this.linkRoutes = new LinkRoutes(this.http, this.repositoryFactory);
 		this.dataRoutes = new DataRoutes(this.http, this.repositoryFactory);
+		this.profileRoutes = new ProfileRoutes(this.http, this.repositoryFactory);
+		this.feedRoutes = new FeedRoutes(this.http, this.repositoryFactory);
 	}
 
 	init() {
@@ -24,5 +30,7 @@ export default class Router {
 		this.userRoutes.init();
 		this.linkRoutes.init();
 		this.dataRoutes.init();
+		this.profileRoutes.init();
+		this.feedRoutes.init();
 	}
 }

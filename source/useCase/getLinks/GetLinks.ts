@@ -19,7 +19,8 @@ export default class GetLinks {
         for (const link of links) formatedLinks.push({
             id: link.id,
             description: link.description,
-            url: link.url
+            url: link.url,
+            isPublic: link.isPublic
         });
         return {
             links: formatedLinks

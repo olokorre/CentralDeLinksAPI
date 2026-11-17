@@ -112,6 +112,50 @@ test("Deve deletar o próprio link pela API", async function () {
     expect(getLinksResponse.data.links).toHaveLength(0);
 });
 
+test("Deve alternar a visibilidade do próprio link pela API", async function () {
+    const token = await register("usuario_http_9");
+    const nick = "usuario_http_9";
+    const addLinkResponse = await call("POST", "/links/add", { url: "https://example.com/", description: "Example" }, { "access-token": token });
+    expect(addLinkResponse.status).toBe(200);
+    const linkId = addLinkResponse.data.id;
+    const profileBefore = await call("GET", `/profile/${nick}`);
+    expect(profileBefore.data.links).toHaveLength(0);
+    const makePublicResponse = await call("PUT", "/links/change-visibility", { linkId, isPublic: true }, { "access-token": token });
+    expect(makePublicResponse.status).toBe(200);
+    const getLinksResponse = await call("GET", "/links/get", undefined, { "access-token": token });
+    expect(getLinksResponse.data.links[0].isPublic).toBe(true);
+    const profilePublic = await call("GET", `/profile/${nick}`);
+    expect(profilePublic.data.links).toHaveLength(1);
+    expect(profilePublic.data.links[0].id).toBe(linkId);
+    const makePrivateResponse = await call("PUT", "/links/change-visibility", { linkId, isPublic: false }, { "access-token": token });
+    expect(makePrivateResponse.status).toBe(200);
+    const profilePrivate = await call("GET", `/profile/${nick}`);
+    expect(profilePrivate.data.links).toHaveLength(0);
+});
+
+test("Não deve alternar a visibilidade do link de outro usuário pela API", async function () {
+    const tokenUser1 = await register("usuario_http_10");
+    const tokenUser2 = await register("usuario_http_11");
+    const addLinkResponse = await call("POST", "/links/add", { url: "https://example.org/", description: "Example org" }, { "access-token": tokenUser1 });
+    expect(addLinkResponse.status).toBe(200);
+    const linkId = addLinkResponse.data.id;
+    const changeResponse = await call("PUT", "/links/change-visibility", { linkId, isPublic: true }, { "access-token": tokenUser2 });
+    expect(changeResponse.status).toBe(404);
+    expect(changeResponse.data.error).toBe("Link not found");
+    const getLinksResponse = await call("GET", "/links/get", undefined, { "access-token": tokenUser1 });
+    expect(getLinksResponse.data.links[0].isPublic).toBe(false);
+});
+
+test("Não deve alternar a visibilidade com isPublic inválido pela API", async function () {
+    const token = await register("usuario_http_12");
+    const addLinkResponse = await call("POST", "/links/add", { url: "https://example.net/", description: "Example net" }, { "access-token": token });
+    expect(addLinkResponse.status).toBe(200);
+    const linkId = addLinkResponse.data.id;
+    const changeResponse = await call("PUT", "/links/change-visibility", { linkId, isPublic: "sim" }, { "access-token": token });
+    expect(changeResponse.status).toBe(422);
+    expect(changeResponse.data.error).toBe("Invalid isPublic");
+});
+
 test("Não deve compartilhar link para si mesmo pela API", async function () {
     const token = await register("usuario_http_4");
     const addLinkResponse = await call("POST", "/links/add", { url: "https://gitlab.com/", description: "Gitlab" }, { "access-token": token });

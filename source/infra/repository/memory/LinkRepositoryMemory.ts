@@ -54,4 +54,16 @@ export default class LinkRepositoryMemory implements LinkRepository {
         return link;
     }
 
+    async getPublicLinksByUser(user: User): Promise<Link[]> {
+        return this.links.filter(link => link.userId === user.id && link.isPublic);
+    }
+
+    async getPublicLinksByUsers(userIds: string[], page?: number, limit?: number): Promise<Link[]> {
+        const ids = new Set(userIds);
+        const links = this.links.filter(link => link.isPublic && ids.has(link.userId));
+        links.sort((firstLink, secondLink) => secondLink.createdAt.getTime() - firstLink.createdAt.getTime());
+        if (page === undefined || limit === undefined) return links;
+        return links.slice((page - 1) * limit, page * limit);
+    }
+
 }

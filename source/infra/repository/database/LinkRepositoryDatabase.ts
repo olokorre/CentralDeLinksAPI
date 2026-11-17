@@ -11,6 +11,8 @@ interface LinkData {
     description: string;
     url: string;
     user_id: string;
+    is_public: boolean;
+    created_at: Date;
 
 }
 
@@ -20,19 +22,19 @@ export default class LinkRepositoryDatabase implements LinkRepository {
     }
 
     protected mount(linkData: LinkData): Link {
-        const {id, description, url, user_id} = linkData;
-        return new Link(url, description, user_id, id);
+        const {id, description, url, user_id, is_public, created_at} = linkData;
+        return new Link(url, description, user_id, id, is_public, created_at);
     }
 
     async save(link: Link): Promise<Link> {
         const [exists] = await this.connection.execute("select 1 from public.link where url = $1 and user_id = $2", [link.url, link.userId]);
         if (exists) throw new ValidationError("URL already exists");
-        const [linkData] = await this.connection.execute("insert into public.link (id, description, url, user_id) values ($1, $2, $3, $4) returning id, description, url, user_id", [link.id, link.description, link.url, link.userId]);
+        const [linkData] = await this.connection.execute("insert into public.link (id, description, url, user_id, is_public) values ($1, $2, $3, $4, $5) returning id, description, url, user_id, is_public, created_at", [link.id, link.description, link.url, link.userId, link.isPublic]);
         return this.mount(linkData);
     }
 
     async getAll(): Promise<Link[]> {
-        const linksData = await this.connection.execute("select id, description, url, user_id from public.link");
+        const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link");
         const links = [];
         for (const linkData of linksData)
             links.push(this.mount(linkData));
@@ -45,7 +47,7 @@ export default class LinkRepositoryDatabase implements LinkRepository {
     }
 
     async findById(linkId: string): Promise<Link> {
-        const [linkData] = await this.connection.execute("select id, description, url, user_id from public.link where id = $1", [linkId]);
+        const [linkData] = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where id = $1", [linkId]);
         if (!linkData) throw new NotFoundError("Link not found");
         return this.mount(linkData);
     }
@@ -56,14 +58,14 @@ export default class LinkRepositoryDatabase implements LinkRepository {
 
     async getAllByUser(user: User, page?: number, limit?: number): Promise<Link[]> {
         if (page === undefined || limit === undefined) {
-            const linksData = await this.connection.execute("select id, description, url, user_id from public.link where user_id = $1 order by id", [user.id]);
+            const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where user_id = $1 order by id", [user.id]);
             const links = [];
             for (const linkData of linksData)
                 links.push(this.mount(linkData));
             return links;
         }
         const offset = (page - 1) * limit;
-        const linksData = await this.connection.execute("select id, description, url, user_id from public.link where user_id = $1 order by id limit $2 offset $3", [user.id, limit, offset]);
+        const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where user_id = $1 order by id limit $2 offset $3", [user.id, limit, offset]);
         const links = [];
         for (const linkData of linksData)
             links.push(this.mount(linkData));
@@ -72,8 +74,33 @@ export default class LinkRepositoryDatabase implements LinkRepository {
 
     async update(link: Link): Promise<Link> {
         await this.findById(link.id);
-        await this.connection.execute("update public.link set description = $1 where id = $2", [link.description, link.id]);
+        await this.connection.execute("update public.link set description = $1, is_public = $2 where id = $3", [link.description, link.isPublic, link.id]);
         return link;
+    }
+
+    async getPublicLinksByUser(user: User): Promise<Link[]> {
+        const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where user_id = $1 and is_public = true order by id", [user.id]);
+        const links = [];
+        for (const linkData of linksData)
+            links.push(this.mount(linkData));
+        return links;
+    }
+
+    async getPublicLinksByUsers(userIds: string[], page?: number, limit?: number): Promise<Link[]> {
+        if (userIds.length === 0) return [];
+        if (page === undefined || limit === undefined) {
+            const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where is_public = true and user_id = any($1) order by created_at desc, id desc", [userIds]);
+            const links = [];
+            for (const linkData of linksData)
+                links.push(this.mount(linkData));
+            return links;
+        }
+        const offset = (page - 1) * limit;
+        const linksData = await this.connection.execute("select id, description, url, user_id, is_public, created_at from public.link where is_public = true and user_id = any($1) order by created_at desc, id desc limit $2 offset $3", [userIds, limit, offset]);
+        const links = [];
+        for (const linkData of linksData)
+            links.push(this.mount(linkData));
+        return links;
     }
 
 }
