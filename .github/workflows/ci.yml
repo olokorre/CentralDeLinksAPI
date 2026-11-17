@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci --include=dev
+      - name: Compilar (tsc)
+        run: npx tsc
+      - name: Preparar banco de teste
+        run: |
+          printf 'DB_USER=test\nDB_PASSWORD=test\nDATABASE=test\nDB_HOST=127.0.0.1\nDB_PORT=5432\n' > .env
+          PGPASSWORD=test psql -h 127.0.0.1 -U test -d test -f database.sql
+      - name: Testes
+        run: npm test
